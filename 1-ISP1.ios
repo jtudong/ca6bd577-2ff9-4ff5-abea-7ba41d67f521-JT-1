@@ -1,0 +1,161 @@
+Current configuration : 2174 bytes
+!
+! Last configuration change at 18:18:06 MST Fri May 17 2024 by lab
+! NVRAM config last updated at 18:23:49 MST Fri May 17 2024 by lab
+!
+version 15.7
+service timestamps debug datetime msec localtime show-timezone year
+service timestamps log datetime msec localtime show-timezone year
+no service password-encryption
+!
+hostname ISP1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+logging buffered 32768
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+clock timezone MST -7 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+ip vrf management
+!
+!
+!
+!
+ip domain lookup source-interface Ethernet0/0
+ip domain name shamrock.local
+ip name-server 208.67.222.222
+ip cef
+login on-failure log
+login on-success log
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+archive
+ log config
+  logging enable
+  logging size 200
+  notify syslog contenttype plaintext
+username lab privilege 15 password 0 lab
+username cisco privilege 15 password 0 cisco
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ description Cloud0
+ ip address dhcp
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+!
+interface Ethernet0/1
+ description PUB-SW1 e0/0
+ ip address 100.64.1.1 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet0/3
+ ip vrf forwarding management
+ ip address 172.31.255.1 255.255.255.0
+ duplex auto
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat inside source list 1 interface Ethernet0/0 overload
+ip route vrf management 0.0.0.0 0.0.0.0 172.31.255.254
+ip ssh version 2
+!
+ipv6 ioam timestamp
+!
+snmp-server community company.read RO
+snmp-server ifindex persist
+snmp-server location Corp
+snmp-server chassis-id ISP1
+!
+access-list 1 permit 100.64.0.0 0.0.255.255
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ session-timeout 30
+ exec-timeout 15 0
+ privilege level 15
+ logging synchronous
+ login local
+line aux 0
+line vty 0 4
+ exec-timeout 720 0
+ logging synchronous
+ login local
+ transport preferred none
+ transport input telnet ssh
+!
+ntp server time.google.com
+!
+end
