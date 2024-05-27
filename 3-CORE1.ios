@@ -1,6 +1,7 @@
-Current configuration : 4750 bytes
+Current configuration : 4868 bytes
 !
-! Last configuration change at 19:32:52 mst Sun May 26 2024
+! Last configuration change at 21:49:10 mst Sun May 26 2024
+! NVRAM config last updated at 22:30:01 mst Sun May 26 2024 by lab
 !
 version 15.2
 service timestamps debug datetime msec localtime show-timezone year
@@ -77,14 +78,12 @@ vlan 92
 !
 interface GigabitEthernet0/0
  description fw1 eth1/2
- no switchport
- ip address 100.64.255.2 255.255.255.252
- ip ospf 10 area 0
+ switchport mode access
  negotiation auto
+ spanning-tree portfast edge
 !
 interface GigabitEthernet0/1
- description fw2 eth1/2
- switchport access vlan 10
+ description fw eth1/2
  switchport mode access
  negotiation auto
  spanning-tree portfast edge
@@ -118,6 +117,11 @@ interface GigabitEthernet1/3
  ip vrf forwarding management
  ip address 172.31.255.3 255.255.255.0
  negotiation auto
+!
+interface Vlan1
+ description fw eth1/2
+ ip address 100.64.255.2 255.255.255.252
+ ip ospf 10 area 0
 !
 interface Vlan10
  description Workstations
@@ -171,6 +175,7 @@ banner incoming ^C
 IOSv - Cisco Systems Confidential -
 
 Supplemental End User License Restrictions
+
 
 This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
 
