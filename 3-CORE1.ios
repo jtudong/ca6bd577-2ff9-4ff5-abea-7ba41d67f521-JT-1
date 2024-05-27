@@ -1,7 +1,6 @@
-Current configuration : 4868 bytes
+Current configuration : 3538 bytes
 !
-! Last configuration change at 21:49:10 mst Sun May 26 2024
-! NVRAM config last updated at 22:30:01 mst Sun May 26 2024 by lab
+! Last configuration change at 08:26:45 mst Mon May 27 2024
 !
 version 15.2
 service timestamps debug datetime msec localtime show-timezone year
@@ -46,9 +45,6 @@ archive
   logging enable
   logging size 200
   notify syslog contenttype plaintext
- path flash0:/Core1-
- maximum 5
- write-memory
 !
 spanning-tree mode pvst
 spanning-tree extend system-id
@@ -63,6 +59,8 @@ vlan 20
 vlan 92
  name management
 !
+vlan 999
+ name unused-port
 !
 !
 !
@@ -76,47 +74,69 @@ vlan 92
 !
 !
 !
-interface GigabitEthernet0/0
+!
+interface Ethernet0/0
  description fw1 eth1/2
  switchport mode access
- negotiation auto
  spanning-tree portfast edge
 !
-interface GigabitEthernet0/1
+interface Ethernet0/1
  description fw eth1/2
  switchport mode access
- negotiation auto
  spanning-tree portfast edge
 !
-interface GigabitEthernet0/2
+interface Ethernet0/2
  description access1 g0/0
+ switchport trunk allowed vlan 10,20,92
  switchport trunk encapsulation dot1q
  switchport mode trunk
- negotiation auto
 !
-interface GigabitEthernet0/3
+interface Ethernet0/3
+ description Servers
  switchport access vlan 20
  switchport mode access
- negotiation auto
  spanning-tree portfast edge
 !
-interface GigabitEthernet1/0
+interface Ethernet1/0
+ description Workstation
  switchport access vlan 10
  switchport mode access
- negotiation auto
  spanning-tree portfast edge
 !
-interface GigabitEthernet1/1
- negotiation auto
+interface Ethernet1/1
+ switchport access vlan 999
+ switchport mode access
+ spanning-tree portfast edge
 !
-interface GigabitEthernet1/2
- negotiation auto
+interface Ethernet1/2
+ switchport access vlan 999
+ switchport mode access
+ spanning-tree portfast edge
 !
-interface GigabitEthernet1/3
+interface Ethernet1/3
+ switchport access vlan 999
+ switchport mode access
+ spanning-tree portfast edge
+!
+interface Ethernet2/0
+ switchport access vlan 999
+ switchport mode access
+ spanning-tree portfast edge
+!
+interface Ethernet2/1
+ switchport access vlan 999
+ switchport mode access
+ spanning-tree portfast edge
+!
+interface Ethernet2/2
+ switchport access vlan 999
+ switchport mode access
+ spanning-tree portfast edge
+!
+interface Ethernet2/3
  no switchport
  ip vrf forwarding management
  ip address 172.31.255.3 255.255.255.0
- negotiation auto
 !
 interface Vlan1
  description fw eth1/2
@@ -144,13 +164,13 @@ router ospf 10
 ip forward-protocol nd
 !
 no ip http server
+ip http secure-server
 !
 ip route 0.0.0.0 0.0.0.0 100.64.255.1 251
 ip route vrf management 0.0.0.0 0.0.0.0 172.31.255.254
 ip ssh version 2
 ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
 ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
-!
 !
 !
 !
@@ -162,34 +182,6 @@ snmp ifmib ifindex persist
 !
 control-plane
 !
-banner exec ^C
-IOSv - Cisco Systems Confidential -
-
-Supplemental End User License Restrictions
-
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
-
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
-banner incoming ^C
-IOSv - Cisco Systems Confidential -
-
-Supplemental End User License Restrictions
-
-
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
-
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
-banner login ^C
-IOSv - Cisco Systems Confidential -
-
-Supplemental End User License Restrictions
-
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
-
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
 !
 line con 0
  session-timeout 30
@@ -208,5 +200,6 @@ line vty 0 4
  transport output ssh
 !
 ntp server 216.239.35.0
+!
 !
 end
