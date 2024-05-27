@@ -1,6 +1,6 @@
-Current configuration : 4604 bytes
+Current configuration : 4750 bytes
 !
-! Last configuration change at 17:54:22 mst Thu May 23 2024 by lab
+! Last configuration change at 19:32:52 mst Sun May 26 2024
 !
 version 15.2
 service timestamps debug datetime msec localtime show-timezone year
@@ -32,7 +32,7 @@ ip vrf management
 !
 !
 !
-ip domain-name shamrock.lab
+ip domain-name company.pri
 ip name-server 208.67.222.222
 ip cef
 login on-failure log
@@ -59,6 +59,9 @@ vlan 10
 vlan 20
  name Servers
 !
+vlan 92
+ name management
+!
 !
 !
 !
@@ -74,10 +77,10 @@ vlan 20
 !
 interface GigabitEthernet0/0
  description fw1 eth1/2
- switchport access vlan 10
- switchport mode access
+ no switchport
+ ip address 100.64.255.2 255.255.255.252
+ ip ospf 10 area 0
  negotiation auto
- spanning-tree portfast edge
 !
 interface GigabitEthernet0/1
  description fw2 eth1/2
@@ -119,11 +122,17 @@ interface GigabitEthernet1/3
 interface Vlan10
  description Workstations
  ip address 100.64.10.1 255.255.255.0
+ ip helper-address 100.64.20.10
  ip ospf 10 area 0
 !
 interface Vlan20
  description Servers
  ip address 100.64.20.1 255.255.255.0
+ ip ospf 10 area 0
+!
+interface Vlan92
+ description management
+ ip address 100.64.92.1 255.255.255.0
  ip ospf 10 area 0
 !
 router ospf 10
@@ -132,7 +141,7 @@ ip forward-protocol nd
 !
 no ip http server
 !
-ip route 0.0.0.0 0.0.0.0 100.64.10.254 251
+ip route 0.0.0.0 0.0.0.0 100.64.255.1 251
 ip route vrf management 0.0.0.0 0.0.0.0 172.31.255.254
 ip ssh version 2
 ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
