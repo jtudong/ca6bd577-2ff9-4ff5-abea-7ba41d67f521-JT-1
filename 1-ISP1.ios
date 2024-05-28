@@ -1,7 +1,7 @@
-Current configuration : 2174 bytes
+Current configuration : 2169 bytes
 !
-! Last configuration change at 18:18:06 MST Fri May 17 2024 by lab
-! NVRAM config last updated at 18:23:49 MST Fri May 17 2024 by lab
+! Last configuration change at 19:12:35 MST Mon May 27 2024 by lab
+! NVRAM config last updated at 19:32:55 MST Mon May 27 2024 by lab
 !
 version 15.7
 service timestamps debug datetime msec localtime show-timezone year
@@ -50,7 +50,7 @@ ip vrf management
 !
 !
 ip domain lookup source-interface Ethernet0/0
-ip domain name shamrock.local
+ip domain name company.pri
 ip name-server 208.67.222.222
 ip cef
 login on-failure log
@@ -100,7 +100,7 @@ interface Ethernet0/0
 !
 interface Ethernet0/1
  description PUB-SW1 e0/0
- ip address 100.64.1.1 255.255.255.252
+ ip address 63.156.58.1 255.255.255.0
  ip nat inside
  ip virtual-reassembly in
  duplex auto
@@ -131,7 +131,7 @@ snmp-server ifindex persist
 snmp-server location Corp
 snmp-server chassis-id ISP1
 !
-access-list 1 permit 100.64.0.0 0.0.255.255
+access-list 1 permit 63.156.58.0 0.0.0.255
 !
 control-plane
 !
